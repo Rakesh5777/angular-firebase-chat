@@ -23,6 +23,11 @@ import { HotToastModule } from '@ngneat/hot-toast';
 import { MatMenuModule } from '@angular/material/menu';
 import { UserService } from './services/user.service';
 import { StorageService } from './services/storage.service';
+import { AllchatsComponent } from './components/allchats/allchats.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatListModule } from '@angular/material/list';
+import { ChatComponent } from './components/chat/chat.component';
+import { MatTabsModule } from '@angular/material/tabs';
 
 const MatModules = [
   MatToolbarModule,
@@ -30,7 +35,10 @@ const MatModules = [
   MatButtonModule,
   MatFormFieldModule,
   MatInputModule,
-  MatMenuModule
+  MatMenuModule,
+  MatAutocompleteModule,
+  MatListModule,
+  MatTabsModule
 ]
 @NgModule({
   declarations: [
@@ -38,7 +46,9 @@ const MatModules = [
     LandingPageComponent,
     LoginComponent,
     SignupComponent,
-    HomeComponent
+    HomeComponent,
+    AllchatsComponent,
+    ChatComponent
   ],
   imports: [
     BrowserModule,

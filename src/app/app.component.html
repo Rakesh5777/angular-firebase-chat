@@ -1,13 +1,11 @@
 <mat-toolbar color="primary">
-  <span routerLink="/"> This is Rakesh's Angular Chat App </span>
+  <span class="pointer" routerLink="/home"> Chat Now ...<mat-icon>chat</mat-icon> </span>
   <ng-container
     *ngIf="user.currentUserProfile$ | async as user; else logInButton"
   >
     <button class="center" mat-button [matMenuTriggerFor]="userMenu">
       <img
         class="profile-image"
-        width="30"
-        height="30"
         [src]="user.photoURL ?? 'assets/placeHolder.webp'"
         alt=""
       />
@@ -21,7 +19,7 @@
     </button>
   </ng-template>
 </mat-toolbar>
-<div class="content">
+<div>
   <router-outlet></router-outlet>
 </div>
 
@@ -29,8 +27,6 @@
   <button routerLink="/profile" mat-menu-item>
     <img
       class="profile-image"
-      width="30"
-      height="30"
       [src]="
         (user.currentUserProfile$ | async)?.photoURL ??
         'assets/placeHolder.webp'

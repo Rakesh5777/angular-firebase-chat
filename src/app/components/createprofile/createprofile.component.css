@@ -3,6 +3,10 @@
     gap: 1rem;
 }
 
+.row mat-form-field {
+    width: calc(50% - 0.5rem);
+}
+
 .image-container {
     position: relative;
 }

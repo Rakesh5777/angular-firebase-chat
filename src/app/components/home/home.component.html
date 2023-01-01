@@ -1,3 +1,24 @@
-<h1 *ngIf="user.currentUserProfile$ | async as user">
-  Welcome to our app {{ user.displayName }} bro!!
-</h1>
+<div [class.mobile-view]="deviceService.isMobile()" class="container">
+  <ng-container *ngIf="!deviceService.isMobile();else mobileView">
+    <div class="all-chats mat-elevation-z5">
+      <all-chats></all-chats>
+    </div>
+    <div class="chat mat-elevation-z5">
+      <chat></chat>
+    </div>
+  </ng-container>
+  <ng-template #mobileView>
+    <div class="tabs">
+      <mat-tab-group (selectedIndexChange)="taxChanged($event)" [selectedIndex]="deviceUtils.showAllChats ? 0 : 1">
+        <mat-tab label="contacts"> </mat-tab>
+        <mat-tab label="chat"> </mat-tab>
+      </mat-tab-group>
+    </div>
+    <div [class.hidden]="!deviceUtils.showAllChats" class="all-chats mobile mat-elevation-z5">
+      <all-chats></all-chats>
+    </div>
+    <div [class.hidden]="deviceUtils.showAllChats" class="chat mobile mat-elevation-z5">
+      <chat></chat>
+    </div>
+  </ng-template>
+</div>

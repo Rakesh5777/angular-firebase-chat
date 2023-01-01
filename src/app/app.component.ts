@@ -23,7 +23,7 @@ export class AppComponent {
         error: 'Sign out failed!'
       }))
       .subscribe(() => {
-        this.router.navigate(['']);
+        this.router.navigate(['login']);
       });
   }
 

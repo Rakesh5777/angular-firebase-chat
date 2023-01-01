@@ -1,0 +1,28 @@
+<div class="all-chats-container">
+    <div class="mat-autocomplete-search">
+        <mat-form-field appearance="outline">
+            <input matInput placeholder="Search for chat ..." [formControl]="searchControl" [matAutocomplete]="user" />
+            <mat-autocomplete #user="matAutocomplete">
+                <mat-option (click)="handleChatClick(user)" *ngFor="let user of getActualUsers | async"
+                    [value]="user.displayName"> {{ user.displayName }} </mat-option>
+            </mat-autocomplete>
+            <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
+    </div>
+    <mat-selection-list id="style-3" [formControl]="chatSelectionControl" class="selection-list" #chats
+        [multiple]="false">
+        <mat-divider></mat-divider>
+        <mat-list-option [selected]="getChatSelected(chatItem.id)" *ngFor="let chatItem of allChats;let index = index"
+            [value]="chatItem?.id">
+            <img matListAvatar [src]="chatItem.chatPhotoUrl ?? 'assets/placeHolder.webp'" alt="profile-pic">
+            <p mat-line class="chat-name">
+                <span>{{chatItem?.chatName}}</span>
+                <span class="chat-last-msg-time">{{chatItem?.lastMessageDate | date:'shortTime'}}</span>
+            </p>
+            <p mat-line class="chat-last-msg-dtl">
+                <span>{{chatItem?.lastMessage}}</span>
+            </p>
+            <mat-divider></mat-divider>
+        </mat-list-option>
+    </mat-selection-list>
+</div>

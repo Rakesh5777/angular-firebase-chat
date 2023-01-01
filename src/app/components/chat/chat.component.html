@@ -1,0 +1,25 @@
+<div class="chat-container">
+    <div class="header">
+        <div class="header__left">
+            <img class="header__left__avatar" [src]="(selectedChat$ | async)?.chatPhotoUrl ??'assets/placeHolder.webp' "
+                alt="avatar" />
+            <div class="header__left__name">
+                <h3>{{(selectedChat$ | async)?.chatName}}</h3>
+            </div>
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div id="style-3" class="chat-area">
+        <div [class.sender]="isSender(message.sender)" class="message" *ngFor="let message of messages">
+            {{message.message}} <span class="time">{{message.sentDate | date:'shortTime' }}</span> </div>
+    </div>
+    <div class="message-box">
+        <mat-form-field class="message-input" appearance="outline">
+            <input [formControl]="messageControl" (keydown.enter)="sendMessage()" [autocomplete]="false" type="text"
+                matInput placeholder="Type a message ...">
+            <button (click)="sendMessage()" mat-icon-button matSuffix>
+                <mat-icon>send</mat-icon>
+            </button>
+        </mat-form-field>
+    </div>
+</div>
