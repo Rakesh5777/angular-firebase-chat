@@ -2,9 +2,9 @@
     <div class="mat-autocomplete-search">
         <mat-form-field appearance="outline">
             <input matInput placeholder="Search for chat ..." [formControl]="searchControl" [matAutocomplete]="user" />
-            <mat-autocomplete #user="matAutocomplete">
-                <mat-option (click)="handleChatClick(user)" *ngFor="let user of getActualUsers | async"
-                    [value]="user.displayName"> {{ user.displayName }} </mat-option>
+            <mat-autocomplete (optionSelected)="selectedUser($event.option.value)" #user="matAutocomplete"
+                [displayWith]="usersSearchDisplayFn">
+                <mat-option *ngFor="let user of getActualUsers | async" [value]="user.uid"> {{ user.displayName }} </mat-option>
             </mat-autocomplete>
             <mat-icon matPrefix>search</mat-icon>
         </mat-form-field>

@@ -9,7 +9,7 @@
   </ng-container>
   <ng-template #mobileView>
     <div class="tabs">
-      <mat-tab-group (selectedIndexChange)="taxChanged($event)" [selectedIndex]="deviceUtils.showAllChats ? 0 : 1">
+      <mat-tab-group (selectedIndexChange)="tabChanged($event)" [selectedIndex]="deviceUtils.showAllChats ? 0 : 1">
         <mat-tab label="contacts"> </mat-tab>
         <mat-tab label="chat"> </mat-tab>
       </mat-tab-group>

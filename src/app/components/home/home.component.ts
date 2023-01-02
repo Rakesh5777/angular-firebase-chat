@@ -12,11 +12,7 @@ export class HomeComponent {
 
   constructor(public user: UserService, public deviceService: DeviceDetectorService, public deviceUtils: DeviceUtils) { }
 
-  ngOnInit(): void {
-    console.log(this.deviceService.isMobile());
-  }
-
-  taxChanged(index: number): void {
+  tabChanged(index: number): void {
     this.deviceUtils.showAllChats = index === 0;
   }
 

@@ -3,7 +3,7 @@ import { Message } from './../../../models/chat';
 import { combineLatest, Observable, filter, switchMap } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ChatService } from './../../services/chatservice.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 @UntilDestroy()
@@ -19,6 +19,7 @@ export class ChatComponent implements OnInit {
   public selectedChatId = '';
   public messages: Message[] = [];
   public currentUserId: string = '';
+  @ViewChild('messageInput') messageInput!: ElementRef;
 
   constructor(private chat: ChatService, public user: UserService) { }
 
@@ -28,6 +29,7 @@ export class ChatComponent implements OnInit {
       .subscribe(chat => {
         this.messages = [];
         this.selectedChatId = chat?.id ?? '';
+        this.messageInput?.nativeElement?.focus();
       });
 
     this.selectedChat$

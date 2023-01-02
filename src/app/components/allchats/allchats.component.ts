@@ -48,9 +48,13 @@ export class AllchatsComponent implements OnInit {
       .subscribe((data) => this.chatSelected(data as Chat));
   }
 
-  handleChatClick(user: UserProfile): void {
-    this.chat.selectChat(user).subscribe((chat) => {
-      this.chatSelected(chat);
+  selectedUser(userUid: string): void {
+    this.chat.selectChat(userUid)
+      .pipe(
+        filter(chatId => !!chatId)
+      )
+      .subscribe((chatId) => {
+        this.chat.getAndSetActiveChat(chatId);
     });
   }
 
@@ -69,8 +73,7 @@ export class AllchatsComponent implements OnInit {
     return this.chat.activeChat$?.value?.id === chatId;
   }
 
-  temp(event: any): void {
-    console.log(event)
+  usersSearchDisplayFn(user: UserProfile): string {
+    return user?.displayName || '';
   }
-
 }

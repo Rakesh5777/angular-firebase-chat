@@ -15,7 +15,7 @@
     </div>
     <div class="message-box">
         <mat-form-field class="message-input" appearance="outline">
-            <input [formControl]="messageControl" (keydown.enter)="sendMessage()" [autocomplete]="false" type="text"
+            <input #messageInput [formControl]="messageControl" (keydown.enter)="sendMessage()" [autocomplete]="false" type="text"
                 matInput placeholder="Type a message ...">
             <button (click)="sendMessage()" mat-icon-button matSuffix>
                 <mat-icon>send</mat-icon>

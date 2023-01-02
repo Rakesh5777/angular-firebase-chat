@@ -8,7 +8,7 @@ export class Chat {
 
     //web only
     chatName = '';
-    chatPhotoUrl = '';
+    chatPhotoUrl: string | null = '';
 }
 
 export class Message {

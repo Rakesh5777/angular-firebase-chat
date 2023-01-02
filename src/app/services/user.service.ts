@@ -42,4 +42,9 @@ export class UserService {
     return collectionData(queryAll) as Observable<UserProfile[]>;
   }
 
+  getUserByUid(uid: string): Observable<UserProfile> {
+    const userDoc = doc(this.fireStore, 'users', uid);
+    return from(docData(userDoc) as Observable<UserProfile>);
+  }
+
 }
