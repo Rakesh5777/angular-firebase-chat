@@ -108,6 +108,11 @@
         {{ isSignUpRoute ? "Sign Up" : "Update Profile" }}
       </button>
     </div>
+    <div *ngIf="isSignUpRoute" class="signup-with center margin-top"> or sign up with <mat-icon (click)="signInWithGoogle()"
+        class="google">
+        <img width="30px" height="30px" src="../../../assets/google_icon_png.png" alt="google" />
+      </mat-icon>
+    </div>
     <span *ngIf="isSignUpRoute" class="center margin-top">
       Already an Chat now user? &nbsp;<a routerLink="/login">
         Log In!</a

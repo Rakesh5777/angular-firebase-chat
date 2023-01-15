@@ -6,7 +6,7 @@ import { UserService } from './../../services/user.service';
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, FormGroupDirective, NgForm, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { switchMap } from 'rxjs';
+import { of, switchMap, firstValueFrom } from 'rxjs';
 import { ErrorStateMatcher } from '@angular/material/core';
 
 export function passwordMatchValidator(): ValidatorFn {
@@ -40,7 +40,7 @@ export class SignupComponent implements OnInit {
     uid: new FormControl(''),
     photoURL: new FormControl(''),
     firstName: new FormControl('', [Validators.required]),
-    lastName: new FormControl('', [Validators.required]),
+    lastName: new FormControl(''),
     displayName: new FormControl('', [Validators.required]),
     phone: new FormControl(''),
     address: new FormControl(''),
@@ -117,6 +117,26 @@ export class SignupComponent implements OnInit {
         toast.updateToast({ type: 'success' });
         toast.close();
       });
+  }
+
+  signInWithGoogle(): void {
+    this.auth.signInWithGoogle()
+      .pipe(
+        switchMap(async (user) => {
+          const { uid, displayName, photoURL, phoneNumber } = user.user;
+          const userData: null | UserProfile = await firstValueFrom(this.user.getUserByUid(uid));
+          if (userData?.uid) return userData;
+          return this.user.addUser({ uid, displayName, photoURL, phone: phoneNumber, address: '', firstName: '', lastName: '' });
+        }),
+        this.toast.observe({
+          success: 'Signed up successfully!',
+          loading: 'Signing up...',
+          error: 'Something went wrong! Please try again.'
+        })
+      )
+      .subscribe(() => {
+        this.router.navigateByUrl('/home');
+      })
   }
 
   get firstName() {

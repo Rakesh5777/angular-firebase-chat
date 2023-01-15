@@ -3,9 +3,14 @@ mat-toolbar {
 }
 
 .profile-image {
-    padding-right: 0.4rem;
+    margin-right: 0.4rem !important;
     border-radius: 100%;
     object-fit: cover;
     width: 30px;
     height: 30px;
+}
+
+.flex {
+    display: flex;
+    align-items: center;
 }

@@ -89,4 +89,16 @@
     right: 10px;
     font-size: 0.7rem;
     color: #999;
+ }
+ 
+.empty-chat {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    font-size: 1.5rem;
+    gap: 1rem;
+    color: #999;
 }

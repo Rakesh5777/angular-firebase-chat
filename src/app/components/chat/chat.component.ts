@@ -18,7 +18,7 @@ export class ChatComponent implements OnInit {
   public messageControl = new FormControl('');
   public selectedChatId = '';
   public messages: Message[] = [];
-  public currentUserId: string = '';
+  public currentUserId = '';
   @ViewChild('messageInput') messageInput!: ElementRef;
 
   constructor(private chat: ChatService, public user: UserService) { }
@@ -30,6 +30,7 @@ export class ChatComponent implements OnInit {
         this.messages = [];
         this.selectedChatId = chat?.id ?? '';
         this.messageInput?.nativeElement?.focus();
+        this.chat.setChatOnlineStatus(this.selectedChat$.value!);
       });
 
     this.selectedChat$

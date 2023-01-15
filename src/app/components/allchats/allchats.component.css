@@ -34,6 +34,8 @@ mat-selection-list.selection-list {
 }
 
 .chat-last-msg-dtl {
+    display: flex !important;
+    justify-content: space-between;
     width: 100%;
     font-size: 0.8rem;
     color: #3f3f3f;
@@ -43,4 +45,16 @@ mat-selection-list.selection-list {
     padding-right: 1rem;
     font-size: 0.8rem;
     color: #3f3f3f;
+}
+
+.unseen-msg-count {
+    font-size: 0.8rem;
+    padding-right: 1rem;
+    color: #3f3f3f;
+    width: 3rem;
+    text-align: center;
+}
+
+.highlight{
+    color : #3F51B5;
 }

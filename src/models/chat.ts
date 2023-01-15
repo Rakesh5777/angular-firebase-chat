@@ -1,7 +1,7 @@
 export class Chat {
     id = '';
     userIds: string[] = [];
-    userData: { displayName: string, photoUrl: string }[] = [];
+    userData: ChatUserData[] = [];
     lastMessage = '';
     lastMessageDate = new Date();
     messages: Message[] = [];
@@ -9,6 +9,14 @@ export class Chat {
     //web only
     chatName = '';
     chatPhotoUrl: string | null = '';
+    unSeenMessageCount = 0;
+}
+
+export class ChatUserData {
+    displayName = '';
+    photoUrl = '';
+    unSeenMessageCount = 0;
+    isOnline = false;
 }
 
 export class Message {

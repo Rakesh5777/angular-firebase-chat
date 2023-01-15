@@ -1,25 +1,33 @@
 <div class="chat-container">
-    <div class="header">
-        <div class="header__left">
-            <img class="header__left__avatar" [src]="(selectedChat$ | async)?.chatPhotoUrl ??'assets/placeHolder.webp' "
-                alt="avatar" />
-            <div class="header__left__name">
-                <h3>{{(selectedChat$ | async)?.chatName}}</h3>
+    <ng-container *ngIf="selectedChat$ | async as selectedChat;else EmptyTemp">
+        <div class="header">
+            <div class="header__left">
+                <img class="header__left__avatar" [src]="selectedChat?.chatPhotoUrl ??'assets/placeHolder.webp' "
+                    alt="avatar" />
+                <div class="header__left__name">
+                    <h3>{{selectedChat?.chatName}}</h3>
+                </div>
             </div>
         </div>
-    </div>
-    <mat-divider></mat-divider>
-    <div id="style-3" class="chat-area">
-        <div [class.sender]="isSender(message.sender)" class="message" *ngFor="let message of messages">
-            {{message.message}} <span class="time">{{message.sentDate | date:'shortTime' }}</span> </div>
-    </div>
-    <div class="message-box">
-        <mat-form-field class="message-input" appearance="outline">
-            <input #messageInput [formControl]="messageControl" (keydown.enter)="sendMessage()" [autocomplete]="false" type="text"
-                matInput placeholder="Type a message ...">
-            <button (click)="sendMessage()" mat-icon-button matSuffix>
-                <mat-icon>send</mat-icon>
-            </button>
-        </mat-form-field>
-    </div>
+        <mat-divider></mat-divider>
+        <div id="style-3" class="chat-area">
+            <div [class.sender]="isSender(message.sender)" class="message" *ngFor="let message of messages">
+                {{message.message}} <span class="time">{{message.sentDate | date:'shortTime' }}</span> </div>
+        </div>
+        <div class="message-box">
+            <mat-form-field class="message-input" appearance="outline">
+                <input #messageInput [formControl]="messageControl" (keydown.enter)="sendMessage()"
+                    [autocomplete]="false" type="text" matInput placeholder="Type a message ...">
+                <button (click)="sendMessage()" mat-icon-button matSuffix>
+                    <mat-icon>send</mat-icon>
+                </button>
+            </mat-form-field>
+        </div>
+    </ng-container>
+    <ng-template #EmptyTemp>
+        <div class="empty-chat">
+            <img width="200px" src="assets/emptyChat.png" alt="empty-chat" />
+            <h3 class="empty-chat-text">Select a chat to start messaging ...</h3>
+        </div>
+    </ng-template>
 </div>

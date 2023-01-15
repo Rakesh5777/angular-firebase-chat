@@ -1,3 +1,4 @@
+import { AppUtils } from './../../utils/apputils';
 import { DeviceUtils } from './../../services/device.service';
 import { Chat } from './../../../models/chat';
 import { ChatService as ChatService } from './../../services/chatservice.service';
@@ -5,7 +6,7 @@ import { UserProfile } from './../../../models/userProfile';
 import { UserService } from './../../services/user.service';
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { combineLatest, map, startWith, Observable, filter, take } from 'rxjs';
+import { combineLatest, map, startWith, Observable, filter, take, switchMap } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 @UntilDestroy()
@@ -40,11 +41,11 @@ export class AllchatsComponent implements OnInit {
         take(1))
       .subscribe(data => !this.deviceUtils.isMobile && this.chatSelected(data[0]));
 
-    combineLatest([this.chatSelectionControl.valueChanges.pipe(startWith('')), this.chat.myChats$])
+    this.chatSelectionControl.valueChanges.pipe(startWith(''))
       .pipe(
         untilDestroyed(this),
-        filter(([selectedChat, allChats]) => !!selectedChat?.length && !!allChats.length),
-        map(([selectedChat, allChats]) => allChats.find((chat: Chat) => chat.id == selectedChat?.[0])))
+        filter((selectedChat) => !!selectedChat?.[0]),
+        switchMap((selectedChat) => this.chat.getChatWithId(selectedChat![0]).pipe(take(1))))
       .subscribe((data) => this.chatSelected(data as Chat));
   }
 
@@ -66,7 +67,7 @@ export class AllchatsComponent implements OnInit {
     if (this.deviceUtils.isMobile) {
       this.deviceUtils.showAllChats = false;
     }
-    this.chat.setActiveChat(chat);
+    this.chat.handleSetActiveChat(chat);
   }
 
   getChatSelected(chatId: string): boolean {
@@ -75,5 +76,11 @@ export class AllchatsComponent implements OnInit {
 
   usersSearchDisplayFn(user: UserProfile): string {
     return user?.displayName || '';
+  }
+
+  getLastMessage(chat: Chat): string {
+    if (!chat?.lastMessageDate) return '';
+    const lastMessage = AppUtils.getFortyCharacters(chat.lastMessage);
+    return lastMessage;
   }
 }

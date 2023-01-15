@@ -42,4 +42,16 @@ export class LoginComponent implements OnInit {
     return this.loginForm.get('password');
   }
 
+  logInWithGoogle(): void {
+    this.auth.signInWithGoogle()
+      .pipe(this.toast.observe({
+        loading: 'Logging in...',
+        success: 'Logged in successfully!',
+        error: 'Login failed!'
+      }))
+      .subscribe(() => {
+        this.router.navigate(['/home']);
+      });
+  }
+
 }

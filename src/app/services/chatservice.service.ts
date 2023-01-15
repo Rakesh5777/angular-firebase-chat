@@ -1,6 +1,6 @@
-import { Chat, Message } from './../../models/chat';
+import { Chat, Message, ChatUserData } from './../../models/chat';
 import { UserProfile } from './../../models/userProfile';
-import { Observable, concatMap, take, map, filter, BehaviorSubject, switchMap, of, combineLatest, from } from 'rxjs';
+import { Observable, concatMap, take, map, filter, BehaviorSubject, switchMap, of, combineLatest, from, firstValueFrom, delay } from 'rxjs';
 import { UserService } from './user.service';
 import { Firestore, doc, collection, addDoc, query, where, collectionData, Timestamp, updateDoc, docData } from '@angular/fire/firestore';
 import { Injectable } from '@angular/core';
@@ -62,8 +62,10 @@ export class ChatService {
 
   updateChatObjectFields(user: UserProfile, chat: Chat): Chat {
     const otherUserIndex = user?.uid === chat.userIds[0] ? 1 : 0;
+    const currentUserIndex = user?.uid === chat.userIds[0] ? 0 : 1;
     const otherUser = chat.userData[otherUserIndex];
-    return { ...chat, lastMessageDate: (chat.lastMessageDate as any)?.toDate(), chatName: otherUser.displayName, chatPhotoUrl: otherUser.photoUrl }
+    const unSeenMessageCount = chat.userData[currentUserIndex].unSeenMessageCount;
+    return { ...chat, lastMessageDate: (chat.lastMessageDate as any)?.toDate(), chatName: otherUser.displayName, chatPhotoUrl: otherUser.photoUrl, unSeenMessageCount };
   }
 
   getChatWithId(chatId: string): Observable<Chat | null> {
@@ -78,14 +80,54 @@ export class ChatService {
 
   getAndSetActiveChat(chatId: string): void {
     this.getChatWithId(chatId)
-      .pipe(take(1))
+      .pipe(
+        take(1),
+        filter(chat => !!chat?.id)
+      )
       .subscribe((chat) => {
-        this.activeChat$.next(chat)
+        this.setActiveChat(chat!);
       });
   }
 
+  handleSetActiveChat(chat: Chat): void {
+    this.setActiveChat(chat);
+  }
+
   setActiveChat(chat: Chat): void {
-    this.activeChat$.next(chat)
+    const oldChatId = this.activeChat$.value?.id;
+    if (!!oldChatId && oldChatId !== chat.id) {
+      this.handleUpdateOfflineStatus(oldChatId);
+    }
+    this.activeChat$.next(chat);
+  }
+
+  handleUpdateOfflineStatus(chatId: string): void {
+    this.getChatWithId(chatId)
+      .pipe(
+        filter(chat => !!chat?.id),
+        take(1)
+      )
+      .subscribe((chat) => {
+        this.setChatOnlineStatus(chat!, false);
+      });
+  }
+
+  setChatOnlineStatus(chat: Chat, isOnline = true): void {
+    if (!chat?.id) return;
+    const chatRef = doc(this.fireStore, 'chats', chat.id);
+    this.user.currentUserProfile$.pipe(
+      filter(user => !!user),
+      take(1),
+      switchMap((user) => {
+        return from(updateDoc(chatRef, {
+          userData: this.updateChatOnlineStatus(user!, chat, isOnline)
+        }))
+      })
+    ).subscribe();
+  }
+
+  getActiveChat(): Observable<Chat | null> {
+    return this.activeChat$;
   }
 
   sendMessage(chatId: string, message: string): Observable<any> {
@@ -101,19 +143,32 @@ export class ChatService {
             message,
             sender: user?.uid,
             sentDate: fireBaseTimeStampForToday
-          }))
+          })).pipe(switchMap(() => of(user)))
         }),
-        concatMap(() => {
+        concatMap(async (user) => {
           return from(updateDoc(chatDocRef, {
             lastMessage: message,
-            lastMessageDate: fireBaseTimeStampForToday
+            lastMessageDate: fireBaseTimeStampForToday,
+            userData: await this.getUpdatedChatUserDataWithUnSeenCount(user!)
           }))
         })
       );
   }
 
-  getActiveChat(): Observable<Chat | null> {
-    return this.activeChat$;
+  updateChatOnlineStatus(user: UserProfile, chat: Chat, isOnline = true): ChatUserData[] {
+    const currentUserIndex = user?.uid === chat.userIds[0] ? 0 : 1;
+    chat.userData[currentUserIndex].isOnline = isOnline;
+    chat.userData[currentUserIndex].unSeenMessageCount = 0;
+    return chat.userData;
+  }
+
+  async getUpdatedChatUserDataWithUnSeenCount(user: UserProfile): Promise<ChatUserData[]> {
+    const activeChatData = await firstValueFrom(this.getChatWithId(this.activeChat$.value!.id));
+    const otherUserIndex = user?.uid === activeChatData?.userIds[0] ? 1 : 0;
+    const otherUserData = activeChatData!.userData[otherUserIndex];
+    if (otherUserData?.isOnline) return activeChatData!.userData;
+    otherUserData.unSeenMessageCount = !!otherUserData.unSeenMessageCount ? otherUserData.unSeenMessageCount + 1 : 1;
+    return activeChatData!.userData;
   }
 
   getMessages(chatId: string): Observable<Message[]> {
