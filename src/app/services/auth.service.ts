@@ -1,7 +1,7 @@
-import { DeviceUtils } from './device.service';
 import { Injectable } from '@angular/core';
-import { Auth, UserCredential, authState, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signInWithRedirect } from '@angular/fire/auth';
+import { Auth, GoogleAuthProvider, UserCredential, authState, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, signInWithRedirect } from '@angular/fire/auth';
 import { Observable, from } from 'rxjs';
+import { DeviceUtils } from './device.service';
 
 @Injectable({
   providedIn: 'root'
@@ -26,8 +26,10 @@ export class AuthService {
 
   signInWithGoogle(): Observable<UserCredential> {
     const provider = new GoogleAuthProvider();
-    const googleSignUpFunction = this.deviceUtil.isMobile ? signInWithRedirect : signInWithPopup;
-    return from(googleSignUpFunction(this.auth, provider));
+    provider.setCustomParameters({
+      prompt: 'select_account'
+    });
+    return from(signInWithPopup(this.auth, provider));
   }
 
 }

@@ -1,8 +1,11 @@
-import { AuthService } from './../../services/auth.service';
+import { UserProfile } from './../../../models/userProfile';
+import { UserService } from './../../services/user.service';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
+import { AuthService } from './../../services/auth.service';
+import { firstValueFrom, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +19,7 @@ export class LoginComponent implements OnInit {
     password: new FormControl('', [Validators.required, Validators.minLength(8)])
   })
 
-  constructor(private auth: AuthService, private router: Router, private toast: HotToastService) { }
+  constructor(private auth: AuthService, private router: Router, private toast: HotToastService, private user: UserService) { }
 
   ngOnInit() {
   }
@@ -44,6 +47,13 @@ export class LoginComponent implements OnInit {
 
   logInWithGoogle(): void {
     this.auth.signInWithGoogle()
+      .pipe(
+        switchMap(async (user) => {
+          const { uid, displayName, photoURL, phoneNumber } = user.user;
+          const userData: null | UserProfile = await firstValueFrom(this.user.getUserByUid(uid));
+          if (userData?.uid) return userData;
+          return this.user.addUser({ uid, displayName, photoURL, phone: phoneNumber, address: '', firstName: '', lastName: '' });
+        }))
       .pipe(this.toast.observe({
         loading: 'Logging in...',
         success: 'Logged in successfully!',

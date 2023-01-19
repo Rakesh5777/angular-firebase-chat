@@ -28,6 +28,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatListModule } from '@angular/material/list';
 import { ChatComponent } from './components/chat/chat.component';
 import { MatTabsModule } from '@angular/material/tabs';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { RouterModule } from '@angular/router';
 
 const MatModules = [
   MatToolbarModule,
@@ -51,7 +53,7 @@ const MatModules = [
     ChatComponent
   ],
   imports: [
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'serverApp' }),
     AppRoutingModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
@@ -61,6 +63,13 @@ const MatModules = [
     provideStorage(() => getStorage()),
     provideFirestore(() => getFirestore()),
     HotToastModule.forRoot(),
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    }),
+    RouterModule,
   ],
   providers: [AuthService, UserService, StorageService],
   bootstrap: [AppComponent]
