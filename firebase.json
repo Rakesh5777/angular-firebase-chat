@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/angular-firebase-chat",
+    "public": "dist/angular-firebase-chat/browser",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
