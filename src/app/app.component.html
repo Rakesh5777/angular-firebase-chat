@@ -1,4 +1,4 @@
-<mat-toolbar color="primary">
+<mat-toolbar class="toolbar-color">
   <span class="pointer" routerLink="/home"> Chat Now ...<mat-icon>chat</mat-icon> </span>
   <ng-container
     *ngIf="user.currentUserProfile$ | async as user; else logInButton"

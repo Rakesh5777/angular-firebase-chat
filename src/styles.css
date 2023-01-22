@@ -8,7 +8,7 @@ body {
 body {
     margin: 0;
     font-family: Roboto, "Helvetica Neue", sans-serif;
-    background-color: #F2F2F2;
+    background-color: #FAE3D9;
 }
 
 .form-container {
@@ -16,7 +16,7 @@ body {
     max-width: 20rem;
     margin: auto;
     margin-top: 2rem;
-    background: #eceff1;
+    background: #F7F5EB;
     padding: 48px;
     border-radius: 16px;
 }
