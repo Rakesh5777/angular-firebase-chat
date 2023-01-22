@@ -1,10 +1,11 @@
-import { UserService } from './../../services/user.service';
-import { Message } from './../../../models/chat';
-import { combineLatest, Observable, filter, switchMap } from 'rxjs';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { ChatService } from './../../services/chatservice.service';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { AnimationOptions } from 'ngx-lottie';
+import { filter, switchMap } from 'rxjs';
+import { Message } from './../../../models/chat';
+import { ChatService } from './../../services/chatservice.service';
+import { UserService } from './../../services/user.service';
 
 @UntilDestroy()
 @Component({
@@ -20,6 +21,9 @@ export class ChatComponent implements OnInit {
   public messages: Message[] = [];
   public currentUserId = '';
   @ViewChild('messageInput') messageInput!: ElementRef;
+  options: AnimationOptions = {
+    path: '/assets/eyes.json',
+  };
 
   constructor(private chat: ChatService, public user: UserService) { }
 
@@ -63,5 +67,11 @@ export class ChatComponent implements OnInit {
 
   isSender(senderId: any): boolean {
     return senderId === this.currentUserId;
+  }
+
+  isMessageRead(): boolean {
+    return true; //TODO implement this
+    const otherChatIndex = this.selectedChat$?.value?.userIds.findIndex((id) => id !== this.currentUserId);
+    return this.selectedChat$?.value?.userData[otherChatIndex!].unSeenMessageCount === 0;
   }
 }

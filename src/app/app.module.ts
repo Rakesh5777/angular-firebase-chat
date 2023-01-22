@@ -30,6 +30,12 @@ import { ChatComponent } from './components/chat/chat.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { RouterModule } from '@angular/router';
+import { LottieModule } from 'ngx-lottie';
+import player from 'lottie-web';
+
+export function playerFactory() {
+  return player;
+}
 
 const MatModules = [
   MatToolbarModule,
@@ -70,6 +76,7 @@ const MatModules = [
       registrationStrategy: 'registerWhenStable:30000'
     }),
     RouterModule,
+    LottieModule.forRoot({ player: playerFactory })
   ],
   providers: [AuthService, UserService, StorageService],
   bootstrap: [AppComponent]

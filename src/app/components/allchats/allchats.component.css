@@ -36,6 +36,7 @@ mat-selection-list.selection-list {
 .chat-last-msg-dtl {
     display: flex !important;
     justify-content: space-between;
+    align-items: center;
     width: 100%;
     font-size: 0.8rem;
     color: #3f3f3f;
@@ -49,12 +50,12 @@ mat-selection-list.selection-list {
 
 .unseen-msg-count {
     font-size: 0.8rem;
-    padding-right: 1rem;
+    margin-right: 1rem;
     color: #3f3f3f;
     width: 3rem;
     text-align: center;
-}
-
-.highlight{
-    color : #3F51B5;
+    border-radius: 50%;
+    background: #EAC7C7 !important;
+    width: 20px;
+    height: 20px;
 }

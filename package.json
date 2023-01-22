@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "start:with-sw": "ng serve --live-reload=false --configuration development-with-serviceworker",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint"
@@ -27,7 +28,9 @@
     "@ngneat/hot-toast": "^4.1.0",
     "@ngneat/overview": "^3.0.0",
     "@ngneat/until-destroy": "^9.2.2",
+    "lottie-web": "^5.10.1",
     "ngx-device-detector": "^4.0.1",
+    "ngx-lottie": "^9.1.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"

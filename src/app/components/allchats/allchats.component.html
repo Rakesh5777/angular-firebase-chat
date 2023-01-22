@@ -17,12 +17,12 @@
             <img matListAvatar [src]="chatItem.chatPhotoUrl ?? 'assets/placeHolder.webp'" alt="profile-pic">
             <p mat-line class="chat-name">
                 <span>{{chatItem?.chatName}}</span>
-                <span [class.highlight]="!!chatItem?.unSeenMessageCount" class="chat-last-msg-time">{{chatItem?.lastMessageDate |
+                <span class="chat-last-msg-time">{{chatItem?.lastMessageDate |
                     date:'shortTime'}}</span>
             </p>
             <p mat-line class="chat-last-msg-dtl">
                 <span>{{getLastMessage(chatItem)}}</span>
-                <span [class.highlight]="!!chatItem?.unSeenMessageCount" *ngIf="!!chatItem?.unSeenMessageCount"
+                <span *ngIf="!!chatItem?.unSeenMessageCount"
                     class="unseen-msg-count">{{chatItem?.unSeenMessageCount}}</span>
             </p>
             <mat-divider></mat-divider>

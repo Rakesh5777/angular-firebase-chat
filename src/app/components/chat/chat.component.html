@@ -6,13 +6,16 @@
                     alt="avatar" />
                 <div class="header__left__name">
                     <h3>{{selectedChat?.chatName}}</h3>
+                    <!-- <ng-lottie [options]="options"></ng-lottie> -->
                 </div>
             </div>
         </div>
         <mat-divider></mat-divider>
         <div id="style-3" class="chat-area">
-            <div [class.sender]="isSender(message.sender)" class="message" *ngFor="let message of messages">
-                {{message.message}} <span class="time">{{message.sentDate | date:'shortTime' }}</span> </div>
+            <div [class.sender]="isSender(message.sender)" [ngClass]="isSender(message.sender) ? 'sender' : 'receiver'"
+                class="message" *ngFor="let message of messages"> {{message.message}} <span class="time">{{message.sentDate |
+                    date:'shortTime' }}<mat-icon *ngIf="isSender(message.sender)" class="icons">{{isMessageRead() ? 'done_all' :
+                        'done'}}</mat-icon></span> </div>
         </div>
         <div class="message-box">
             <mat-form-field class="message-input" appearance="outline">
